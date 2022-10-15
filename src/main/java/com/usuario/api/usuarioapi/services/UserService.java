@@ -3,6 +3,8 @@ package com.usuario.api.usuarioapi.services;
 import com.usuario.api.usuarioapi.model.UserModel;
 import com.usuario.api.usuarioapi.repositories.UserRepository;
 import org.apache.catalina.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,8 +27,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserModel> findAll(){
-        return userRepository.findAll();
+    public Page<UserModel> findAll(Pageable pageable){
+        return userRepository.findAll(pageable);
     }
 
     public Optional<UserModel> findById(long id){
