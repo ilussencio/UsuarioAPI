@@ -1,9 +1,8 @@
-package com.usuario.api.usuarioapi.controller;
+package com.usuario.api.usuarioapi.usuario.controller;
 
-import com.usuario.api.usuarioapi.DTO.UserDTO;
-import com.usuario.api.usuarioapi.model.UserModel;
-import com.usuario.api.usuarioapi.services.UserService;
-import org.apache.catalina.User;
+import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
+import com.usuario.api.usuarioapi.usuario.model.UserModel;
+import com.usuario.api.usuarioapi.usuario.services.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/usuario")
 public class UserController {
     final UserService userService;
 
@@ -26,12 +28,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserDTO userDTO){
-        if(userService.existsByEmail(userDTO.getEmail())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario já cadastrado");
-        }
+//        if(userService.existsByEmail(userDTO.getEmail())){
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario já cadastrado");
+//        }
+
+        System.out.println(userDTO);
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userDTO, userModel);
-        System.out.println(userModel);
+        userModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
     }
 
@@ -69,6 +74,7 @@ public class UserController {
         userModel.setNome(userDTO.getNome());
         userModel.setTelefone(userDTO.getTelefone());
         userModel.setEmail(userDTO.getEmail());
+        userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.OK).body(userService.save(userModel));
     }
 

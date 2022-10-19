@@ -1,4 +1,4 @@
-package com.usuario.api.usuarioapi.model;
+package com.usuario.api.usuarioapi.usuario.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -21,9 +22,21 @@ public class UserModel {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String telefone;
 
     @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private String usuario;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(nullable = false)
+    private LocalDateTime createAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updateAt;
 }

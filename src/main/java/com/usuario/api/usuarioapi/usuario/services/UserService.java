@@ -1,14 +1,12 @@
-package com.usuario.api.usuarioapi.services;
+package com.usuario.api.usuarioapi.usuario.services;
 
-import com.usuario.api.usuarioapi.model.UserModel;
-import com.usuario.api.usuarioapi.repositories.UserRepository;
-import org.apache.catalina.User;
+import com.usuario.api.usuarioapi.usuario.model.UserModel;
+import com.usuario.api.usuarioapi.usuario.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
