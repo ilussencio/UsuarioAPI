@@ -7,35 +7,30 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="usuarios")
-public class UserModel {
+@Table(name="codigo_reset")
+public class CodResetModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(nullable = false)
-    private String nome;
-
-    @Column(nullable = true)
-    private String telefone;
+    private long codigo;
 
     @Column(nullable = false)
-    private String email;
-
-    @ManyToOne
-    @JoinColumn(name="id_login")
-    private List<LoginModel> login;
+    private boolean validacao;
 
     @Column(nullable = false)
     private LocalDateTime createAt;
 
     @Column(nullable = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime expiration;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserModel usuario;
 }
