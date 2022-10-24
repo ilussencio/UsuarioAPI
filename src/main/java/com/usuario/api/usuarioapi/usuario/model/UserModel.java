@@ -1,5 +1,6 @@
 package com.usuario.api.usuarioapi.usuario.model;
 
+import com.usuario.api.usuarioapi.usuario.enums.Access;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,14 +8,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="usuarios")
+@Table(name="USUARIO")
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +29,14 @@ public class UserModel {
     @Column(nullable = false)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name="id_login")
-    private List<LoginModel> login;
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(nullable = false)
+    private Access nivelAccess;
 
     @Column(nullable = false)
     private LocalDateTime createAt;

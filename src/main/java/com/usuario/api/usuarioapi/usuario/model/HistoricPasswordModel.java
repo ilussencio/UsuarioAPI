@@ -13,25 +13,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="user_login")
-public class LoginModel {
+@Table(name="HISTORIC_PASSWORD")
+public class HistoricPasswordModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id_login;
-
-    @Column(nullable = false)
-    private String username;
+    private long id;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private boolean status;
+    private LocalDateTime date;
 
-    @Column(nullable = false)
-    private LocalDateTime createAt;
-
-    @ManyToOne
+    //REFERENCIA DO USUARIO
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private UserModel user;
 }

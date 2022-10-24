@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="codigo_reset")
+@Table(name="COD_RESET")
 public class CodResetModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +31,8 @@ public class CodResetModel {
     @Column(nullable = false)
     private LocalDateTime expiration;
 
+    //REFERENCIA DO USUARIO
     @OneToOne(cascade = CascadeType.ALL)
-    private UserModel usuario;
+    @JoinColumn(name = "id")
+    private UserModel user;
 }

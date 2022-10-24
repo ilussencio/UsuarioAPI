@@ -3,6 +3,7 @@ package com.usuario.api.usuarioapi.usuario.controller;
 import com.usuario.api.usuarioapi.email.model.EmailModel;
 import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
+import com.usuario.api.usuarioapi.usuario.enums.Access;
 import com.usuario.api.usuarioapi.usuario.model.CodResetModel;
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
 import com.usuario.api.usuarioapi.usuario.services.CodResetService;
@@ -29,24 +30,29 @@ public class UserController {
     final CodResetService codResetService;
     final EmailService emailService;
 
-    public UserController(UserService userService, CodResetService codResetService, EmailService emailService){
+    public UserController(UserService userService, CodResetService codResetService, EmailService emailService) {
         this.userService = userService;
         this.codResetService = codResetService;
         this.emailService = emailService;
     }
 
+    //CRIAR USUARIO
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserDTO userDTO){
         if(userService.existsByEmail(userDTO.getEmail())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado");
+        }
+
+        if(userService.existsByUsername(userDTO.getUsername())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario já cadastrado");
         }
 
-        System.out.println(userDTO);
 
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userDTO, userModel);
         userModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.setNivelAccess(Access.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
     }
 
@@ -88,7 +94,7 @@ public class UserController {
     }
     @GetMapping("/buscar/{pesquisa}")
     public ResponseEntity<Object> findByAll(@PathVariable(value = "pesquisa") String pesquisa){
-        Optional<UserModel> userModelOptional = userService.findByUsuario(pesquisa);
+        Optional<UserModel> userModelOptional = userService.findByUsername(pesquisa);
         if(userModelOptional.isPresent())
             return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
 
@@ -115,7 +121,7 @@ public class UserController {
 
         CodResetModel codModel = new CodResetModel();
         codModel.setCodigo(Integer.parseInt(str.toString()));
-        codModel.setUsuario(userModelOptional.get());
+        codModel.setUser(userModelOptional.get());
         codModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
         codModel.setExpiration(LocalDateTime.now(ZoneId.of("UTC")).plusHours(2));
         codModel.setValidacao(false);

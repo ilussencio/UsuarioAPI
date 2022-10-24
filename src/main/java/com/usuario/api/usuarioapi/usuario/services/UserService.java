@@ -21,13 +21,14 @@ public class UserService {
     public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);
     }
+    public boolean existsByUsername(String username) {return userRepository.existsByUsername(username);}
     @Transactional
     public UserModel save(UserModel user){return userRepository.save(user);}
     public Page<UserModel> findAll(Pageable pageable){
         return userRepository.findAll(pageable);
     }
     public Optional<UserModel> findById(long id){return userRepository.findById(id);}
-    public Optional<UserModel> findByUsuario(String usuario){return userRepository.findByUsuario(usuario);}
+    public Optional<UserModel> findByUsername(String usuario){return userRepository.findByUsername(usuario);}
     public Optional<UserModel> findByEmail(String email){return userRepository.findByEmail(email);}
     @Transactional
     public void delete(UserModel userModel){
