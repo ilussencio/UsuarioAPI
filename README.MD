@@ -20,24 +20,25 @@ Objetivo: Criar um usuario
 Envio:
 ```json
 {
-	"nome":"Nome do usuario",
-	"telefone":"34999999999",
+	"nome":"Nome completo",
+	"telefone":"34912345678",
 	"email":"email@email.com",
-	"usuario":"usuario",
-	"senha":"senha"
+	"username":"username",
+	"senha":"password"
 }
 ```
 Retorno:
 ```json
 {
-	"id": 1,
-	"nome": "Nome do usuario",
-	"telefone": "34999999999",
-	"email": "email@email.com",
-	"usuario": "usuario",
-	"senha": "senha",
-	"createAt": "2022-10-19T23:33:20.148684",
-	"updateAt": "2022-10-19T23:33:20.148813"
+  "id": 2,
+  "nome": "Nome completo",
+  "telefone": "34912345678",
+  "email": "email@email.com",
+  "username": "username",
+  "senha": "password",
+  "nivelAccess": "USER",
+  "createAt": "2022-10-25T17:41:29.1127358",
+  "updateAt": "2022-10-25T17:41:29.1127358"
 }
 ```
 
@@ -54,40 +55,52 @@ Retorno:
 {
   "content": [
     {
+      "id": 1,
+      "nome": "Nome Completo Usuario",
+      "telefone": "34912345678",
+      "email": "email1@email.com",
+      "username": "username2",
+      "senha": "password",
+      "nivelAccess": "USER",
+      "createAt": "2022-10-24T20:57:25.546321",
+      "updateAt": "2022-10-24T20:57:25.546321"
+    },
+    {
       "id": 2,
-      "nome": "Nome do usuario",
-      "telefone": "34999999999",
+      "nome": "Nome completo",
+      "telefone": "34912345678",
       "email": "email@email.com",
-      "usuario": "usuario",
-      "senha": "senha",
-      "createAt": "2022-10-19T23:33:20",
-      "updateAt": "2022-10-19T23:33:20"
+      "username": "username",
+      "senha": "password",
+      "nivelAccess": "USER",
+      "createAt": "2022-10-25T17:41:29.112736",
+      "updateAt": "2022-10-25T17:41:29.112736"
     }
   ],
   "pageable": {
     "sort": {
+      "empty": false,
       "sorted": true,
-      "unsorted": false,
-      "empty": false
+      "unsorted": false
     },
-    "pageNumber": 0,
-    "pageSize": 10,
     "offset": 0,
-    "paged": true,
-    "unpaged": false
+    "pageSize": 10,
+    "pageNumber": 0,
+    "unpaged": false,
+    "paged": true
   },
-  "totalElements": 1,
-  "totalPages": 1,
   "last": true,
-  "numberOfElements": 1,
+  "totalPages": 1,
+  "totalElements": 2,
+  "size": 10,
+  "number": 0,
   "sort": {
+    "empty": false,
     "sorted": true,
-    "unsorted": false,
-    "empty": false
+    "unsorted": false
   },
   "first": true,
-  "number": 0,
-  "size": 10,
+  "numberOfElements": 2,
   "empty": false
 }
 ```

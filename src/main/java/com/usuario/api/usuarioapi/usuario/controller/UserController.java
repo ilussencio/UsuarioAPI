@@ -4,6 +4,7 @@ import com.usuario.api.usuarioapi.email.model.EmailModel;
 import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
 import com.usuario.api.usuarioapi.usuario.enums.Access;
+import com.usuario.api.usuarioapi.usuario.error.ErrorMessage;
 import com.usuario.api.usuarioapi.usuario.model.CodResetModel;
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
 import com.usuario.api.usuarioapi.usuario.services.CodResetService;
@@ -40,13 +41,12 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Object> saveUser(@RequestBody @Valid UserDTO userDTO){
         if(userService.existsByEmail(userDTO.getEmail())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("E-mail já cadastrado!"));
         }
 
         if(userService.existsByUsername(userDTO.getUsername())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario já cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Usuario já cadastrado!"));
         }
-
 
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userDTO, userModel);
@@ -55,35 +55,39 @@ public class UserController {
         userModel.setNivelAccess(Access.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
     }
-
+    //LISTAR TODOS OS USUARIOS
     @GetMapping
     public ResponseEntity<Page<UserModel>> findAll(@PageableDefault(page=0, size=10, sort="id", direction = Sort.Direction.ASC)Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
     }
 
+    //BUSCAR POR ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOne(@PathVariable(value="id") long id){
         Optional<UserModel> userModelOptional = userService.findById(id);
         if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
     }
 
+    //DELETAR POR ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") long id){
         Optional<UserModel> userModelOptional = userService.findById(id);
         if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
         }
         userService.delete(userModelOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Usuario deletedo com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(new ErrorMessage("Usuario deletado com sucesso!"));
     }
-    @PutMapping("/{id}")
+
+    //ALTERAR POR ID
+    @PutMapping("/buscar/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "id") long id, @RequestBody @Valid UserDTO userDTO){
         Optional<UserModel> userModelOptional = userService.findById(id);
         if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
         }
         UserModel userModel = userModelOptional.get();
         userModel.setNome(userDTO.getNome());
@@ -103,14 +107,15 @@ public class UserController {
         if(userModelOptional.isPresent())
             return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
     }
 
-    @GetMapping("resetPassword/{id}")
+    //RESET PASSWORD
+    @GetMapping("/token_password/{id}")
     public ResponseEntity<Object> generateCod(@PathVariable(value = "id") long id){
         Optional<UserModel> userModelOptional = userService.findById(id);
         if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
         }
 
         Random gerador = new Random();
