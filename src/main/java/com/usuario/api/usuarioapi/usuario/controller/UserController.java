@@ -4,12 +4,11 @@ import com.usuario.api.usuarioapi.email.model.EmailModel;
 import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
 import com.usuario.api.usuarioapi.usuario.enums.Access;
-<<<<<<< Updated upstream
 import com.usuario.api.usuarioapi.usuario.error.ErrorMessage;
-=======
+
 import com.usuario.api.usuarioapi.usuario.ErrorMessage.ErrorMessage;
 import com.usuario.api.usuarioapi.usuario.model.CodResetModel;
->>>>>>> Stashed changes
+
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
 import com.usuario.api.usuarioapi.usuario.services.UserService;
 import org.springframework.beans.BeanUtils;
@@ -114,9 +113,6 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
     }
-
-<<<<<<< Updated upstream
-=======
     //RESET PASSWORD
     @GetMapping("/token_password/{id}")
     public ResponseEntity<Object> generateCod(@PathVariable(value = "id") long id){
@@ -129,6 +125,7 @@ public class UserController {
         for(int i = 0; i < 6; i ++){
             str.append(gerador.nextInt(10));
         }
+
         CodResetModel codModel = new CodResetModel();
         codModel.setCodigo(Integer.parseInt(str.toString()));
         codModel.setUser(userModelOptional.get());
@@ -146,6 +143,5 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(codResetService.createCode(codModel));
     }
->>>>>>> Stashed changes
 
 }

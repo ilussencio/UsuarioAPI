@@ -3,7 +3,7 @@ package com.usuario.api.usuarioapi.usuario.controller;
 import com.usuario.api.usuarioapi.email.model.EmailModel;
 import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.ResetDTO;
-import com.usuario.api.usuarioapi.usuario.error.ErrorMessage;
+import com.usuario.api.usuarioapi.usuario.ErrorMessage.ErrorMessage;
 import com.usuario.api.usuarioapi.usuario.model.HistoricPasswordModel;
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
 import com.usuario.api.usuarioapi.usuario.repositories.HistoricPasswordRepository;
