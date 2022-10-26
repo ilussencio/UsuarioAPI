@@ -5,9 +5,7 @@ import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
 import com.usuario.api.usuarioapi.usuario.enums.Access;
 import com.usuario.api.usuarioapi.usuario.error.ErrorMessage;
-import com.usuario.api.usuarioapi.usuario.model.CodResetModel;
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
-import com.usuario.api.usuarioapi.usuario.services.CodResetService;
 import com.usuario.api.usuarioapi.usuario.services.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -28,12 +26,10 @@ import java.util.Random;
 @RequestMapping("/usuario")
 public class UserController {
     final UserService userService;
-    final CodResetService codResetService;
     final EmailService emailService;
 
-    public UserController(UserService userService, CodResetService codResetService, EmailService emailService) {
+    public UserController(UserService userService, EmailService emailService) {
         this.userService = userService;
-        this.codResetService = codResetService;
         this.emailService = emailService;
     }
 
@@ -52,7 +48,7 @@ public class UserController {
         BeanUtils.copyProperties(userDTO, userModel);
         userModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-        userModel.setNivelAccess(Access.USER);
+        userModel.setNivel_access(Access.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
     }
     //LISTAR TODOS OS USUARIOS
@@ -89,12 +85,16 @@ public class UserController {
         if(!userModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
         }
+
         UserModel userModel = userModelOptional.get();
-        userModel.setNome(userDTO.getNome());
-        userModel.setTelefone(userDTO.getTelefone());
+        userModel.setName(userDTO.getName());
+        userModel.setFone(userDTO.getFone());
         userModel.setEmail(userDTO.getEmail());
+
         userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+
         return ResponseEntity.status(HttpStatus.OK).body(userService.save(userModel));
+
     }
     @GetMapping("/buscar/{pesquisa}")
     public ResponseEntity<Object> findByAll(@PathVariable(value = "pesquisa") String pesquisa){
@@ -110,37 +110,5 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
     }
 
-    //RESET PASSWORD
-    @GetMapping("/token_password/{id}")
-    public ResponseEntity<Object> generateCod(@PathVariable(value = "id") long id){
-        Optional<UserModel> userModelOptional = userService.findById(id);
-        if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
-        }
-
-        Random gerador = new Random();
-        StringBuilder str = new StringBuilder();
-        for(int i = 0; i < 6; i ++){
-            str.append(gerador.nextInt(10));
-        }
-
-        CodResetModel codModel = new CodResetModel();
-        codModel.setCodigo(Integer.parseInt(str.toString()));
-        codModel.setUser(userModelOptional.get());
-        codModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
-        codModel.setExpiration(LocalDateTime.now(ZoneId.of("UTC")).plusHours(2));
-        codModel.setValidacao(false);
-        codResetService.createCode(codModel);
-
-        EmailModel emailModel = new EmailModel();
-        emailModel.setEmailTo(userModelOptional.get().getEmail());
-        emailModel.setEmailFrom("ilussencio@gmail.com");
-        //emailModel.setOwnerRef(userModelOptional.get());
-        emailModel.setSubject("SUPORTE: Redefinição de senha");
-        emailModel.setText("<html><center><b>Olá "+userModelOptional.get().getNome()+"</b> <p> Vimos que você solicitou uma alteração de senha. Utilize este PIN para redefinir sua senha. </p> <p>PIN temporário:</p> <h1>"+codModel.getCodigo()+"</h1> <p> Caso tenha alguma dúvida entre em contato com nosso suporte ficaremos felizes em ajudar.</center></html>");
-        System.out.println(emailService.sendEmail(emailModel));
-
-        return ResponseEntity.status(HttpStatus.OK).body(codResetService.createCode(codModel));
-    }
 
 }

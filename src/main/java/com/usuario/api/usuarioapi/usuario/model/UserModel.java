@@ -21,10 +21,10 @@ public class UserModel {
     private long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String name;
 
     @Column(nullable = true)
-    private String telefone;
+    private String fone;
 
     @Column(nullable = false)
     private String email;
@@ -33,10 +33,16 @@ public class UserModel {
     private String username;
 
     @Column(nullable = false)
-    private String senha;
+    private String password;
 
     @Column(nullable = false)
-    private Access nivelAccess;
+    private Access nivel_access;
+
+    @Column(nullable = true)
+    private String token_reset;
+
+    @Column(nullable = true)
+    private LocalDateTime token_expire;
 
     @Column(nullable = false)
     private LocalDateTime createAt;

@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class UserDTO {
     @NotBlank
-    private String nome;
+    private String name;
 
     @NotBlank
-    private String telefone;
+    private String fone;
 
     @NotBlank
     private String email;
@@ -23,5 +23,5 @@ public class UserDTO {
     private String username;
 
     @NotBlank
-    private String senha;
+    private String password;
 }

@@ -26,7 +26,6 @@ public class HistoricPasswordModel {
     private LocalDateTime date;
 
     //REFERENCIA DO USUARIO
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
     private UserModel user;
 }
