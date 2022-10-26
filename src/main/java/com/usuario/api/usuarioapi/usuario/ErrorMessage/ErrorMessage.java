@@ -1,4 +1,4 @@
-package com.usuario.api.usuarioapi.usuario.error;
+package com.usuario.api.usuarioapi.usuario.ErrorMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
