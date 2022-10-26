@@ -104,12 +104,13 @@ public class ResetController {
         if(userModelOptional.get().getToken_reset().equalsIgnoreCase("false")){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Token ja utilizado!"));
         }
-        List<HistoricPasswordModel> list = historicPasswordService.find(userModelOptional.get());
-        for(int i = 0; i < list.length; i ++){
 
+        //VERIFICANDO SE A SENHA JA FOI UTILIZADA ANTERIORMENTE
+        List<HistoricPasswordModel> list = historicPasswordService.find(userModelOptional.get());
+        for(int i = 0; i < list.size(); i ++){
+            if(list.get(i).getPassword().equals(resetDTO.getPassword()))
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Senha já utilizada anteriormente, tente uma nova senha!"));
         }
-        if(historicPasswordService.find(userModelOptional.get()).contains(resetDTO.getPassword()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Senha ja utilizada anteriormente"));
 
         //ATUALIZANDO TABELA
         UserModel userModel = userModelOptional.get();
