@@ -4,10 +4,8 @@ import com.usuario.api.usuarioapi.email.model.EmailModel;
 import com.usuario.api.usuarioapi.email.services.EmailService;
 import com.usuario.api.usuarioapi.usuario.DTO.UserDTO;
 import com.usuario.api.usuarioapi.usuario.enums.Access;
-import com.usuario.api.usuarioapi.usuario.error.ErrorMessage;
 
 import com.usuario.api.usuarioapi.usuario.ErrorMessage.ErrorMessage;
-import com.usuario.api.usuarioapi.usuario.model.CodResetModel;
 
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
 import com.usuario.api.usuarioapi.usuario.services.UserService;
@@ -112,36 +110,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
-    }
-    //RESET PASSWORD
-    @GetMapping("/token_password/{id}")
-    public ResponseEntity<Object> generateCod(@PathVariable(value = "id") long id){
-        Optional<UserModel> userModelOptional = userService.findById(id);
-        if(!userModelOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Usuario não encontrado"));
-        }
-        Random gerador = new Random();
-        StringBuilder str = new StringBuilder();
-        for(int i = 0; i < 6; i ++){
-            str.append(gerador.nextInt(10));
-        }
-
-        CodResetModel codModel = new CodResetModel();
-        codModel.setCodigo(Integer.parseInt(str.toString()));
-        codModel.setUser(userModelOptional.get());
-        codModel.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
-        codModel.setExpiration(LocalDateTime.now(ZoneId.of("UTC")).plusHours(2));
-        codModel.setValidacao(false);
-        codResetService.createCode(codModel);
-
-        EmailModel emailModel = new EmailModel();
-        emailModel.setEmailTo(userModelOptional.get().getEmail());
-        emailModel.setEmailFrom("ilussencio@gmail.com");
-        emailModel.setOwnerRef(userModelOptional.get().getUsername());
-        emailModel.setSubject("SUPORTE: Redefinição de senha");
-        emailModel.setText("<html><center><b>Olá "+userModelOptional.get().getNome()+"</b> <p> Vimos que você solicitou uma alteração de senha. Utilize este PIN para redefinir sua senha. </p> <p>PIN temporário:</p> <h1>"+codModel.getCodigo()+"</h1> <p> Caso tenha alguma dúvida entre em contato com nosso suporte ficaremos felizes em ajudar.</center></html>");
-
-        return ResponseEntity.status(HttpStatus.OK).body(codResetService.createCode(codModel));
     }
 
 }

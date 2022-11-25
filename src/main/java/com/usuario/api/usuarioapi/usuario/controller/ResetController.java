@@ -6,7 +6,6 @@ import com.usuario.api.usuarioapi.usuario.DTO.ResetDTO;
 import com.usuario.api.usuarioapi.usuario.ErrorMessage.ErrorMessage;
 import com.usuario.api.usuarioapi.usuario.model.HistoricPasswordModel;
 import com.usuario.api.usuarioapi.usuario.model.UserModel;
-import com.usuario.api.usuarioapi.usuario.repositories.HistoricPasswordRepository;
 import com.usuario.api.usuarioapi.usuario.services.HistoricPasswordService;
 import com.usuario.api.usuarioapi.usuario.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -74,7 +73,6 @@ public class ResetController {
         emailModel.setOwnerRef(userModelOptional.get().getUsername());
         emailModel.setSubject("SUPORTE: Redefinição de senha");
         emailModel.setText("<html><center><b>Olá "+userModelOptional.get().getName()+"</b> <p> Vimos que você solicitou uma alteração de senha. Utilize este PIN para redefinir sua senha. </p> <p>PIN temporário:</p> <h1>"+userModel.getToken_reset()+"</h1> <p> Caso tenha alguma dúvida entre em contato com nosso suporte ficaremos felizes em ajudar.</center></html>");
-        System.out.println(emailService.sendEmail(emailModel));
 
         return ResponseEntity.status(HttpStatus.OK).body(userService.save(userModel));
     }
@@ -105,12 +103,10 @@ public class ResetController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Token ja utilizado!"));
         }
         List<HistoricPasswordModel> list = historicPasswordService.find(userModelOptional.get());
-        for(int i = 0; i < list.length; i ++){
-
+        for(int i = 0; i < list.size(); i ++){
+            if(list.get(i).getPassword().equals(resetDTO.getPassword()))
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Senha utilizada anteriormente, por favor crie uma nova senha!"));
         }
-        if(historicPasswordService.find(userModelOptional.get()).contains(resetDTO.getPassword()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage("Senha ja utilizada anteriormente"));
-
         //ATUALIZANDO TABELA
         UserModel userModel = userModelOptional.get();
         userModel.setToken_reset(String.valueOf(false));
